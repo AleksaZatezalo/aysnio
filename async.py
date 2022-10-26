@@ -6,6 +6,7 @@ Description: A python file created to learn pythons asyncio lib.
 
 import asyncio
 from time import sleep
+from unittest import result
 import api
 
 # Example One: Print Numbers 1 to 5 Using two Async Functions
@@ -48,13 +49,32 @@ async def kill_time(num):
     await asyncio.sleep(1)
     print('Finished', num)
 
-async def main():
+async def kill_time_1000():
     list_of_tasks = []
     for i in range(1, 1000+1):
         list_of_tasks.append(kill_time(i))
     asyncio.sleep(2)
     asyncio.gather(*list_of_tasks)
     print("Done!")
+
+# Example 4: Gathering Results
+async def main():
+    task = asyncio.create_task(
+        api.fetch_data()
+    )
+
+#    task.cancel()
+#    await asyncio.sleep(3.5)
+    try:
+        await asyncio.wait_for(task, timeout=2)
+        if task.done():
+            print(task.result())
+        result = await task
+        print(result)
+    except asyncio.CancelledError:
+        print("CANCELLED")
+    except asyncio.TimeoutError:
+        print("TIMEOUT")
 
 if __name__ == '__main__':
     asyncio.run(main())
