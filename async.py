@@ -25,7 +25,7 @@ async def other_function():
 
 asyncio.run(main_func())
 
-# Example 2: Using Async code in a syncronus fashion
+# Example 2: Using Async code in a sync/async fashion
 async def send_data(to):
     print(f'Sending data to {to}...')
     await asyncio.sleep(2)
@@ -43,7 +43,18 @@ async def async_send():
 
 
 # Example 3: Kill Time
+async def kill_time(num):
+    print('Running: ', num)
+    await asyncio.sleep(1)
+    print('Finished', num)
 
+async def main():
+    list_of_tasks = []
+    for i in range(1, 1000+1):
+        list_of_tasks.append(kill_time(i))
+    asyncio.sleep(2)
+    asyncio.gather(*list_of_tasks)
+    print("Done!")
 
 if __name__ == '__main__':
-    asyncio.run(async_send())
+    asyncio.run(main())
